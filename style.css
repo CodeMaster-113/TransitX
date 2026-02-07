@@ -1,39 +1,199 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
-#topbar {
-  padding: 10px;
-  background: #111;
-  color: white;
+body {
+  margin: 0;
+  background: #f5f6fa;
+}
+
+/* MAP */
+#map {
+  height: 100vh;
+  width: 100vw;
+  z-index: 1;
+}
+
+/* TOP SEARCH BAR */
+#searchPanel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background: white;
+  padding: 12px 16px 10px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+  z-index: 1000;
+  border-radius: 0 0 16px 16px;
+}
+
+/* BRAND */
+#brandRow {
+  text-align: center;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+/* INPUTS */
+#inputRow {
   display: flex;
   gap: 10px;
 }
 
-input {
-  padding: 8px;
-  border-radius: 6px;
-  border: none;
-  width: 180px;
+#inputRow input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
 }
 
-button {
-  padding: 8px 12px;
-  border-radius: 6px;
+#inputRow input:focus {
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 2px rgba(26,115,232,0.15);
+}
+
+/* ROUTE BUTTON */
+#routeBtn {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
   border: none;
-  background: #00aaff;
+  background: #1a73e8;
   color: white;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-#map {
-  height: calc(100vh - 50px);
+#routeBtn:hover {
+  background: #155fc4;
+}
+
+/* MODE BAR */
+#modeBar {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modeBtn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.modeBtn:hover {
+  background: #eee;
+}
+
+.modeBtn.active {
+  background: #1a73e8;
+  color: white;
+  border-color: #1a73e8;
+}
+
+/* HINT TEXT */
+#hint {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+/* BOTTOM INFO CARD */
+#routeCard {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(92vw, 460px);
+  background: white;
+  border-radius: 16px;
+  padding: 10px 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  z-index: 1000;
 }
 
 #infoBar {
-  background: #222;
-  color: #fff;
-  padding: 6px 12px;
   font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* MODAL */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modalBox {
+  background: white;
+  width: min(90vw, 340px);
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  text-align: center;
+  animation: pop 0.2s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modalBox h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.modalBox p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  color: #444;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+}
+
+.modalActions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#modalCancel {
+  background: #eee;
+}
+
+#modalOk {
+  background: #1a73e8;
+  color: white;
 }
