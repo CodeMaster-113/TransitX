@@ -1,47 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>TransitX Map</title>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <title>TransitX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <style>
-    body { margin: 0; font-family: Arial; }
-    #topbar {
-      padding: 10px;
-      background: #111;
-      color: white;
-      display: flex;
-      gap: 10px;
-    }
-    input, button {
-      padding: 8px;
-      border-radius: 6px;
-      border: none;
-    }
-    button {
-      background: #00aaff;
-      color: white;
-      cursor: pointer;
-    }
-    #map { height: calc(100vh - 50px); }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="topbar">
-  <input id="start" list="startOptions" placeholder="Start location">
-  <datalist id="startOptions">
-    <option value="Your Location">
-  </datalist>
-  <input id="end" placeholder="Destination">
+<!-- Floating Search Card -->
+<div id="searchPanel">
+  <div id="brandRow">
+    <span id="logo">🚦 TransitX</span>
+  </div>
+
+  <div id="inputRow">
+    <input id="start" list="startOptions" placeholder="From">
+    <datalist id="startOptions">
+      <option value="Your Location">
+    </datalist>
+
+    <input id="end" placeholder="To">
+  </div>
+
   <button id="routeBtn">Find Route</button>
+
+  <div id="modeBar">
+    <button class="modeBtn active" data-mode="drive">🚗 Drive</button>
+    <button class="modeBtn" data-mode="train">🚆 Train</button>
+  </div>
+
+  <p id="hint">Train mode shows railway journey between nearest stations.</p>
 </div>
-<div id="infoBar">Distance: — | Time: —</div>
+
+<!-- Bottom Info Card -->
+<div id="routeCard">
+  <div id="infoBar">Distance: — | Time: —</div>
+</div>
 
 <div id="map"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="script.js"></script>
+
+<div id="redirectModal" class="modal hidden">
+  <div class="modalBox">
+    <h3 id="modalTitle">Redirect</h3>
+    <p id="modalText">Do you want to continue?</p>
+    <div class="modalActions">
+      <button id="modalCancel">Cancel</button>
+      <button id="modalOk">Continue</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
