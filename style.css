@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+#topbar {
+  padding: 10px;
+  background: #111;
+  color: white;
+  display: flex;
+  gap: 10px;
+}
+
+input {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  width: 180px;
+}
+
+button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #00aaff;
+  color: white;
+  cursor: pointer;
+}
+
+#map {
+  height: calc(100vh - 50px);
+}
+
+#infoBar {
+  background: #222;
+  color: #fff;
+  padding: 6px 12px;
+  font-size: 14px;
+}

@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("city-urban-roads-streets-abstract-260nw-2549149503.jpg") center / cover no-repeat fixed;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.hero {
+  text-align: center;
+}
+
+.title {
+  font-size: clamp(4rem, 10vw, 9rem);
+  margin: 0;
+  letter-spacing: 4px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin: 12px 0 28px;
+  opacity: 0.85;
+}
+
+.hero button {
+  padding: 12px 28px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 25px;
+  background: #38bdf8;
+  color: black;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.hero button:hover {
+  transform: scale(1.08);
+  background: #7dd3fc;
+}
