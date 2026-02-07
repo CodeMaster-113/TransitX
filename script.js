@@ -91,22 +91,43 @@ function drawRouteByMode() {
   if (activeMode === "train") drawTrainRoute(lastStart, lastEnd);
 }
 
-// ---------------- 🚗 DRIVE ----------------
+// ---------------- 🚗 DRIVE (Traffic-Aware) ----------------
 async function drawDrivingRoute(start, end) {
   const url = `https://api.tomtom.com/routing/1/calculateRoute/${start.lat},${start.lon}:${end.lat},${end.lon}/json?traffic=true&routeType=fastest&key=${TOMTOM_KEY}`;
-
   const res = await fetch(url);
   const data = await res.json();
   const route = data.routes[0];
 
-  const points = route.legs[0].points.map(p => [p.latitude, p.longitude]);
-  const poly = L.polyline(points, { color: "#0066ff", weight: 6 }).addTo(map);
-  routeLayers.push(poly);
+  clearAllRoutes();
+
+  // Draw route segments with traffic-aware color
+  route.legs[0].points.forEach((point, i, arr) => {
+    if (i === 0) return;
+    const prev = arr[i - 1];
+    // Here, simulate traffic color based on travelTime (or use speedLimit if available)
+    let color = "#0066ff"; // normal
+    // Simulated traffic coloring (can be enhanced with real segment traffic info)
+    const randomTraffic = Math.random(); // temporary for demo
+    if (randomTraffic > 0.7) color = "#ff0000"; // heavy
+    else if (randomTraffic > 0.4) color = "#ffa500"; // medium
+
+    const segment = L.polyline(
+      [
+        [prev.latitude, prev.longitude],
+        [point.latitude, point.longitude]
+      ],
+      { color: color, weight: 6 }
+    ).addTo(map);
+    routeLayers.push(segment);
+  });
+
+  const allPoints = route.legs[0].points.map(p => [p.latitude, p.longitude]);
+  const poly = L.polyline(allPoints);
   map.fitBounds(poly.getBounds());
 
   const km = (route.summary.lengthInMeters / 1000).toFixed(2);
   const mins = Math.round(route.summary.travelTimeInSeconds / 60);
-  showInfo(`🚗 ${km} km · ${mins} mins`);
+  showInfo(`🚗 ${km} km · ${mins} mins (Traffic-aware)`);
 }
 
 // ---------------- 🚆 TRAIN ----------------
@@ -127,10 +148,8 @@ async function drawTrainRoute(start, end) {
     endStation = pickNearestByWalking(end, endStations);
   }
 
-  // Walk → nearest station
   await drawWalkingRoute(start, startStation);
 
-  // Rail line
   const railLine = L.polyline(
     [
       [startStation.lat, startStation.lon],
@@ -140,7 +159,6 @@ async function drawTrainRoute(start, end) {
   ).addTo(map);
   routeLayers.push(railLine);
 
-  // Walk → destination if needed
   if (!lastEndText.includes("station")) {
     await drawWalkingRoute(endStation, end);
   }
@@ -162,12 +180,7 @@ async function drawWalkingRoute(from, to) {
   const route = data.routes[0];
 
   const points = route.legs[0].points.map(p => [p.latitude, p.longitude]);
-  const poly = L.polyline(points, {
-    color: "#666",
-    weight: 4,
-    dashArray: "6 6"
-  }).addTo(map);
-
+  const poly = L.polyline(points, { color: "#666", weight: 4, dashArray: "6 6" }).addTo(map);
   routeLayers.push(poly);
 }
 
@@ -179,15 +192,10 @@ async function getRailwayStationsNear(lat, lon, radius) {
     (around:${radius}, ${lat}, ${lon});
     out tags center;
   `;
-
   const url = "https://overpass-api.de/api/interpreter?data=" + encodeURIComponent(query);
   const res = await fetch(url);
   const data = await res.json();
-  return data.elements.map(e => ({
-    lat: e.lat,
-    lon: e.lon,
-    name: e.tags.name || "Railway Station"
-  }));
+  return data.elements.map(e => ({ lat: e.lat, lon: e.lon, name: e.tags.name || "Railway Station" }));
 }
 
 // ---------------- HELPERS ----------------
@@ -228,12 +236,7 @@ function haversineDistance(a, b) {
   const lat1 = (a.lat * Math.PI) / 180;
   const lat2 = (b.lat * Math.PI) / 180;
 
-  const x =
-    Math.sin(dLat / 2) ** 2 +
-    Math.sin(dLon / 2) ** 2 *
-      Math.cos(lat1) *
-      Math.cos(lat2);
-
+  const x = Math.sin(dLat / 2) ** 2 + Math.sin(dLon / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
   return 2 * R * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x));
 }
 
@@ -241,19 +244,16 @@ function haversineDistance(a, b) {
 document.getElementById("routeBtn").addEventListener("click", findRoute);
 
 let pendingRedirectURL = null;
-
 function showRedirectModal(title, text, url) {
   pendingRedirectURL = url;
   document.getElementById("modalTitle").innerText = title;
   document.getElementById("modalText").innerText = text;
   document.getElementById("redirectModal").classList.remove("hidden");
 }
-
 document.getElementById("modalCancel").onclick = () => {
   pendingRedirectURL = null;
   document.getElementById("redirectModal").classList.add("hidden");
 };
-
 document.getElementById("modalOk").onclick = () => {
   if (pendingRedirectURL) window.open(pendingRedirectURL, "_blank");
   pendingRedirectURL = null;
